@@ -61,8 +61,18 @@ export function RoundEditor({ round, onDone }: Props) {
         <Button variant="ghost" size="icon-lg" onClick={onDone} aria-label="Retour">
           <ArrowLeftIcon />
         </Button>
-        <Input value={name} onChange={(e) => setName(e.target.value)} className="h-10 text-base" />
+        <h1 className="text-lg font-semibold">{round ? 'Modifier la manche' : 'Nouvelle manche'}</h1>
       </header>
+
+      <label className="flex flex-col gap-1.5">
+        <span className="text-sm font-medium text-muted-foreground">Titre</span>
+        <Input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Ex. : Années 80"
+          className="h-10 text-base"
+        />
+      </label>
 
       <div className="flex flex-col gap-2">
         {slots.map((slot, i) => {
