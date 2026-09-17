@@ -10,7 +10,7 @@ PWA (Vite + React + shadcn/ui) installable sur iPhone. Les extraits de 30 s vien
 - **Manches** : 5 morceaux, point de départ réglable dans l'extrait, bouton « Compléter au hasard ».
 - **Lecteur** : lecture / pause / stop globaux, isoler (solo) et couper (mute) par piste, volume par piste mémorisé dans la manche. Les extraits bouclent.
 
-Le volume est égalisé automatiquement (cible −16 LUFS par piste) ; le curseur ajuste ensuite à la main.
+Le volume est égalisé automatiquement (cible −16 LUFS par piste) ; le curseur ajuste ensuite à la main..
 
 ## Développement
 
