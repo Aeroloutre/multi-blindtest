@@ -1,7 +1,11 @@
 // Proxy de recherche Deezer : l'API publique n'envoie pas d'en-têtes CORS.
+import { parseFeat } from './_deezer.ts'
+
 type DeezerTrack = {
   id: number
   title: string
+  title_short: string
+  title_version: string
   duration: number
   preview: string
   artist: { name: string }
@@ -51,8 +55,9 @@ export async function GET(request: Request): Promise<Response> {
         .filter((t) => t.preview)
         .map((t) => ({
           id: t.id,
-          title: t.title,
+          title: t.title_short || t.title,
           artist: t.artist.name,
+          feat: parseFeat(t.title_version),
           album: t.album.title,
           cover: t.album.cover_medium,
         }))

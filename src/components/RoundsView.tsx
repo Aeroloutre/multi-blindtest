@@ -82,7 +82,15 @@ export function RoundsView({ onCreate, onEdit, onPlay }: Props) {
                   const t = tracks.find((t) => t.id === slot.trackId)
                   return (
                     <li key={i} className="truncate">
-                      {t ? `${t.artist} — ${t.title}` : 'Morceau supprimé'}
+                      {t ? (
+                        <>
+                          {t.artist}
+                          {t.feat && <span className="text-muted-foreground/50"> {t.feat}</span>} —{' '}
+                          {t.title}
+                        </>
+                      ) : (
+                        'Morceau supprimé'
+                      )}
                     </li>
                   )
                 })}

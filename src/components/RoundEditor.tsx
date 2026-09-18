@@ -254,7 +254,7 @@ export function RoundEditor({ round, onDone }: Props) {
             <div key={i} className="flex flex-col gap-3 rounded-xl border p-3">
               <div className="flex items-center justify-between gap-2">
                 <button type="button" className="min-w-0 text-left" onClick={() => setPicking(i)}>
-                  <TrackInfo title={track.title} artist={track.artist} cover={track.cover} />
+                  <TrackInfo title={track.title} artist={track.artist} feat={track.feat} cover={track.cover} />
                 </button>
                 <Button variant="ghost" size="icon-lg" onClick={() => setSlot(i, null)} aria-label="Retirer">
                   <XIcon />

@@ -127,6 +127,7 @@ export function Player({ round, onBack }: Props) {
                 <TrackInfo
                   title={track?.title ?? '?'}
                   artist={track?.artist ?? '?'}
+                  feat={track?.feat}
                   cover={track?.cover}
                   className={cn(ch.muted && 'line-through')}
                 />

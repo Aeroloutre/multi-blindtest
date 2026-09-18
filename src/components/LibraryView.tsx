@@ -50,7 +50,7 @@ export function LibraryView() {
             const busy = downloading.includes(r.id)
             return (
               <div key={r.id} className="flex items-center justify-between gap-2 border-b py-2 last:border-0">
-                <TrackInfo title={r.title} artist={r.artist} cover={r.cover} />
+                <TrackInfo title={r.title} artist={r.artist} feat={r.feat} cover={r.cover} />
                 <Button
                   variant={inLibrary ? 'ghost' : 'outline'}
                   size="icon-lg"
@@ -76,7 +76,7 @@ export function LibraryView() {
           )}
           {tracks.map((t) => (
             <div key={t.id} className="flex items-center justify-between gap-2 border-b py-2 last:border-0">
-              <TrackInfo title={t.title} artist={t.artist} cover={t.cover} />
+              <TrackInfo title={t.title} artist={t.artist} feat={t.feat} cover={t.cover} />
               <Button variant="ghost" size="icon-lg" onClick={() => remove(t.id)} aria-label="Supprimer">
                 <Trash2Icon />
               </Button>

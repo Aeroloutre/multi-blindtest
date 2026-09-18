@@ -1,9 +1,13 @@
 // Tops Deezer : l'API n'expose pas de « top 300 » par pays.
 // Les charts officielles sont des playlists du compte « Deezer Charts », plafonnées à ~100 titres :
 // on en cumule plusieurs par source pour obtenir un vivier plus large.
+import { parseFeat } from './_deezer.ts'
+
 type DeezerTrack = {
   id: number
   title: string
+  title_short: string
+  title_version: string
   preview: string
   artist: { name: string }
   album: { title: string; cover_medium: string }
@@ -88,8 +92,9 @@ export async function GET(request: Request): Promise<Response> {
     return [
       {
         id: t.id,
-        title: t.title,
+        title: t.title_short || t.title,
         artist: t.artist.name,
+        feat: parseFeat(t.title_version),
         album: t.album.title,
         cover: t.album.cover_medium,
       },

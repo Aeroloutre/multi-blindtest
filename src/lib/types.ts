@@ -2,6 +2,8 @@ export type SearchResult = {
   id: number
   title: string
   artist: string
+  /** Ex. « feat. Pharrell Williams » — absent si le titre n'a pas de featuring. */
+  feat?: string
   album: string
   cover: string
 }

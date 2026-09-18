@@ -111,7 +111,7 @@ export function TrackPicker({ open, onOpenChange, excluded, reserved, onPick }: 
                 onClick={() => pick(t.id)}
                 className="flex w-full items-center justify-between gap-2 border-b py-2 text-left last:border-0 disabled:opacity-40"
               >
-                <TrackInfo title={t.title} artist={t.artist} cover={t.cover} />
+                <TrackInfo title={t.title} artist={t.artist} feat={t.feat} cover={t.cover} />
                 {taken && (
                   <span className="shrink-0 text-xs text-muted-foreground">Dans une manche</span>
                 )}
@@ -133,7 +133,7 @@ export function TrackPicker({ open, onOpenChange, excluded, reserved, onPick }: 
                 onClick={() => pickRemote(r)}
                 className="flex w-full items-center justify-between gap-2 border-b py-2 text-left last:border-0 disabled:opacity-60"
               >
-                <TrackInfo title={r.title} artist={r.artist} cover={r.cover} />
+                <TrackInfo title={r.title} artist={r.artist} feat={r.feat} cover={r.cover} />
                 {downloading.includes(r.id) && <Loader2Icon className="size-4 shrink-0 animate-spin" />}
               </button>
             ))}
