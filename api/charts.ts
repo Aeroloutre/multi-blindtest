@@ -1,7 +1,12 @@
 // Tops Deezer : l'API n'expose pas de « top 300 » par pays.
 // Les charts officielles sont des playlists du compte « Deezer Charts », plafonnées à ~100 titres :
 // on en cumule plusieurs par source pour obtenir un vivier plus large.
-import { parseFeat } from './_deezer.ts'
+// Deezer sépare parfois le featuring dans `title_version` (ex. "(feat. X)"), mais ce champ
+// contient aussi d'autres mentions ("Acoustic Version", "Radio Edit"...) qu'on ne veut pas afficher.
+function parseFeat(titleVersion: string | undefined): string | undefined {
+  const match = titleVersion?.match(/(?:feat\.?|ft\.?|featuring)\s+(.+)/i)
+  return match ? `feat. ${match[1].replace(/\)+\s*$/, '').trim()}` : undefined
+}
 
 type DeezerTrack = {
   id: number
