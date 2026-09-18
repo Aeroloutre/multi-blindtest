@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ChevronDownIcon, PencilIcon, PlayIcon, PlusIcon, Trash2Icon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { removeRound, useStore } from '@/lib/store'
+import { removeRound, removeTracks, tracksOnlyIn, useStore } from '@/lib/store'
 import type { Round } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
@@ -18,8 +18,19 @@ export function RoundsView({ onCreate, onEdit, onPlay }: Props) {
   const toggle = (id: string) =>
     setExpanded((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
 
-  const remove = (round: Round) => {
-    if (confirm(`Supprimer « ${round.name} » ?`)) void removeRound(round.id)
+  const remove = async (round: Round) => {
+    if (!confirm(`Supprimer « ${round.name} » ?`)) return
+    // Les morceaux qu'aucune autre manche n'utilise n'ont plus de raison d'occuper l'appareil.
+    const orphans = tracksOnlyIn(round)
+    await removeRound(round.id)
+    if (orphans.length === 0) return
+    if (
+      confirm(
+        `Supprimer aussi ses ${orphans.length} morceau${orphans.length > 1 ? 'x' : ''} de la bibliothèque ?`,
+      )
+    ) {
+      await removeTracks(orphans.map((t) => t.id))
+    }
   }
 
   return (
@@ -54,7 +65,7 @@ export function RoundsView({ onCreate, onEdit, onPlay }: Props) {
                 <h3 className="truncate font-medium">{round.name}</h3>
               </button>
               <div className="flex shrink-0 gap-1">
-                <Button variant="ghost" size="icon-lg" onClick={() => remove(round)} aria-label="Supprimer">
+                <Button variant="ghost" size="icon-lg" onClick={() => void remove(round)} aria-label="Supprimer">
                   <Trash2Icon />
                 </Button>
                 <Button variant="ghost" size="icon-lg" onClick={() => onEdit(round)} aria-label="Modifier">

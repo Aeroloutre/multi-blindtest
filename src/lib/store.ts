@@ -64,9 +64,34 @@ export function roundsUsing(trackId: number): Round[] {
   return state.rounds.filter((r) => r.slots.some((s) => s.trackId === trackId))
 }
 
+/**
+ * Morceaux déjà réservés par une manche : un titre ne peut pas servir dans deux manches.
+ * `exceptRoundId` laisse une manche réutiliser ses propres morceaux pendant son édition.
+ */
+export function reservedTrackIds(exceptRoundId?: string): number[] {
+  const ids = new Set<number>()
+  for (const round of state.rounds) {
+    if (round.id === exceptRoundId) continue
+    for (const slot of round.slots) ids.add(slot.trackId)
+  }
+  return [...ids]
+}
+
+/** Morceaux de cette manche qu'aucune autre manche n'utilise. */
+export function tracksOnlyIn(round: Round): Track[] {
+  const elsewhere = new Set(reservedTrackIds(round.id))
+  const ids = new Set(round.slots.map((s) => s.trackId).filter((id) => !elsewhere.has(id)))
+  return state.tracks.filter((t) => ids.has(t.id))
+}
+
 export async function removeTrack(id: number) {
   await db.deleteTrack(id)
   update({ tracks: state.tracks.filter((t) => t.id !== id) })
+}
+
+export async function removeTracks(ids: number[]) {
+  await Promise.all(ids.map((id) => db.deleteTrack(id)))
+  update({ tracks: state.tracks.filter((t) => !ids.includes(t.id)) })
 }
 
 export async function saveRound(round: Round) {

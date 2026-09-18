@@ -8,27 +8,54 @@ type DeezerTrack = {
   album: { title: string; cover_medium: string }
 }
 
+type DeezerPlaylist = {
+  id: number
+  title: string
+  nb_tracks: number
+  picture_medium: string
+  user: { name: string }
+}
+
+/** Une manche demande 5 titres : en dessous, la playlist ne sert à rien. */
+const MIN_PLAYLIST_TRACKS = 5
+
 export async function GET(request: Request): Promise<Response> {
-  const q = new URL(request.url).searchParams.get('q')?.trim()
+  const params = new URL(request.url).searchParams
+  const q = params.get('q')?.trim()
+  const playlists = params.get('type') === 'playlist'
   if (!q) return Response.json({ results: [] })
 
   const upstream = await fetch(
-    `https://api.deezer.com/search?limit=25&q=${encodeURIComponent(q)}`,
+    `https://api.deezer.com/search${playlists ? '/playlist' : ''}?limit=25&q=${encodeURIComponent(q)}`,
   )
-  const body = (await upstream.json()) as { data?: DeezerTrack[]; error?: { message: string } }
+  const body = (await upstream.json()) as {
+    data?: (DeezerTrack & DeezerPlaylist)[]
+    error?: { message: string }
+  }
   if (!upstream.ok || body.error) {
     return Response.json({ error: body.error?.message ?? 'Deezer indisponible' }, { status: 502 })
   }
 
-  const results = (body.data ?? [])
-    .filter((t) => t.preview)
-    .map((t) => ({
-      id: t.id,
-      title: t.title,
-      artist: t.artist.name,
-      album: t.album.title,
-      cover: t.album.cover_medium,
-    }))
+  const data = body.data ?? []
+  const results = playlists
+    ? data
+        .filter((p) => p.nb_tracks >= MIN_PLAYLIST_TRACKS)
+        .map((p) => ({
+          id: p.id,
+          title: p.title,
+          tracks: p.nb_tracks,
+          owner: p.user.name,
+          cover: p.picture_medium,
+        }))
+    : data
+        .filter((t) => t.preview)
+        .map((t) => ({
+          id: t.id,
+          title: t.title,
+          artist: t.artist.name,
+          album: t.album.title,
+          cover: t.album.cover_medium,
+        }))
 
   return Response.json(
     { results },
