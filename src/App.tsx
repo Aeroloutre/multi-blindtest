@@ -5,6 +5,7 @@ import { LibraryView } from '@/components/LibraryView'
 import { Player } from '@/components/Player'
 import { RoundEditor } from '@/components/RoundEditor'
 import { RoundsView } from '@/components/RoundsView'
+import { UpdatePrompt } from '@/components/UpdatePrompt'
 import { preferPlaybackSession } from '@/lib/mixer'
 import { loadStore, useStore } from '@/lib/store'
 import type { Round } from '@/lib/types'
@@ -55,6 +56,7 @@ export default function App() {
         </Tabs>
       )}
       <Toaster position="top-center" />
+      <UpdatePrompt />
     </main>
   )
 }

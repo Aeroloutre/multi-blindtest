@@ -32,7 +32,9 @@ export default defineConfig({
     tailwindcss(),
     devApi(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
+      // Enregistrement fait à la main dans UpdatePrompt.tsx, pour afficher une notif à l'utilisateur.
+      injectRegister: null,
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
         name: 'Multi Blind Test',
